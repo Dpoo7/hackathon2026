@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Find Labour - KaamSetu</title>
+
+<style>
+
+body{
+margin:0;
+font-family: Arial, sans-serif;
+background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+}
+
+/* HEADER */
+
+.header{
+display:flex;
+align-items:center;
+justify-content:center;
+position:relative;
+padding:18px;
+font-size:26px;
+font-weight:bold;
+}
+
+.back-home{
+position:absolute;
+left:15px;
+padding:8px 14px;
+border:none;
+border-radius:8px;
+background:#ff5252;
+color:white;
+cursor:pointer;
+transition:.3s;
+}
+
+.back-home:hover{
+background:#ff1744;
+}
+
+/* SEARCH */
+
+.controls{
+display:flex;
+justify-content:center;
+gap:15px;
+margin:20px;
+flex-wrap:wrap;
+}
+
+input, select{
+padding:10px;
+border-radius:8px;
+border:none;
+width:220px;
+}
+
+/* GRID */
+
+.labour-list{
+display:grid;
+grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+gap:20px;
+padding:20px;
+}
+
+.card{
+background:#ffffff15;
+border-radius:14px;
+padding:15px;
+text-align:center;
+cursor:pointer;
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-5px) scale(1.03);
+background:#ffffff25;
+}
+
+.card img{
+width:80px;
+height:80px;
+border-radius:50%;
+margin-bottom:10px;
+}
+
+/* PROFILE PANEL */
+
+.profile{
+position:fixed;
+top:0;
+right:-400px;
+width:350px;
+height:100%;
+background:#1c2e35;
+padding:20px;
+transition:.4s;
+overflow:auto;
+box-shadow:-5px 0 20px rgba(0,0,0,0.5);
+}
+
+.profile.active{
+right:0;
+}
+
+.profile img{
+width:100px;
+border-radius:50%;
+}
+
+.badge{
+background:#00c853;
+padding:5px 10px;
+border-radius:20px;
+display:inline-block;
+margin-top:5px;
+}
+
+.online{
+color:#00e676;
+font-size:14px;
+}
+
+button{
+padding:10px;
+margin-top:10px;
+width:100%;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:15px;
+}
+
+.apply{
+background:#00c853;
+color:white;
+}
+
+.chat{
+background:#2196f3;
+color:white;
+}
+
+.back{
+background:#ff5252;
+color:white;
+}
+
+/* MOBILE RESPONSIVE */
+
+@media(max-width:768px){
+
+.header{
+font-size:20px;
+}
+
+.labour-list{
+grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
+gap:12px;
+padding:10px;
+}
+
+.card{
+padding:10px;
+}
+
+.profile{
+width:100%;
+}
+
+.controls input,
+.controls select{
+width:100%;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<button class="back-home" onclick="goHome()">⬅ Back</button>
+Find Labour
+</div>
+
+<div class="controls">
+<input type="text" id="search" placeholder="Search labour">
+<select id="stateFilter">
+<option value="">All States</option>
+<option>Delhi</option>
+<option>Maharashtra</option>
+<option>Gujarat</option>
+<option>Punjab</option>
+<option>Rajasthan</option>
+<option>Uttar Pradesh</option>
+<option>Bihar</option>
+<option>Tamil Nadu</option>
+<option>Karnataka</option>
+<option>West Bengal</option>
+</select>
+</div>
+
+<div class="labour-list" id="labourList"></div>
+
+<!-- PROFILE PANEL -->
+
+<div class="profile" id="profilePanel">
+<img id="pImg">
+<h2 id="pName"></h2>
+<p id="pSkill"></p>
+<span class="badge">Verified ✔</span>
+<p class="online">● Online</p>
+<p id="pState"></p>
+<p id="pBudget"></p>
+<p>⭐ Rating: 4.5</p>
+<button class="chat">Chat with Labour</button>
+<button class="apply" onclick="hireLabour()">Hire Now</button>
+<button class="back" onclick="closeProfile()">Close</button>
+<p id="pStatus"></p>
+<button onclick="completeJob(pName.innerText)">Mark Job Complete</button>
+</div>
+
+<script>
+
+const names=["Ramesh","Suresh","Amit","Rahul","Vikas","Manoj","Anil","Deepak","Sunil","Rajesh","Pankaj","Vijay","Arjun","Karan","Rohit","Ajay","Mukesh","Sanjay","Mahesh","Nitin"];
+
+const skills=["Electrician","Plumber","Carpenter","Painter","Mason","Welder","Driver","Cleaner"];
+
+const states=["Delhi","Maharashtra","Gujarat","Punjab","Rajasthan","Uttar Pradesh","Bihar","Tamil Nadu","Karnataka","West Bengal"];
+
+const container=document.getElementById("labourList");
+
+let labourData=[];
+let currentLabour=null;
+
+for(let i=1;i<=150;i++){
+
+const name=names[Math.floor(Math.random()*names.length)]+" Kumar";
+const skill=skills[Math.floor(Math.random()*skills.length)];
+const state=states[Math.floor(Math.random()*states.length)];
+const img=Math.floor(Math.random()*90);
+const budget=500+Math.floor(Math.random()*2000);
+
+labourData.push({name,skill,state,img,budget});
+
+}
+
+function render(data){
+
+container.innerHTML="";
+
+data.forEach(labour=>{
+
+const card=document.createElement("div");
+card.className="card";
+
+card.innerHTML=`
+<img src="https://randomuser.me/api/portraits/men/${labour.img}.jpg">
+<h3>${labour.name}</h3>
+<p>${labour.skill}</p>
+<p>${labour.state}</p>
+`;
+
+card.onclick=()=>openProfile(labour);
+
+container.appendChild(card);
+
+});
+}
+
+render(labourData);
+
+document.getElementById("search").addEventListener("input",function(){
+
+const value=this.value.toLowerCase();
+
+const filtered=labourData.filter(l=>l.name.toLowerCase().includes(value) || l.skill.toLowerCase().includes(value));
+
+render(filtered);
+
+});
+
+document.getElementById("stateFilter").addEventListener("change",function(){
+
+const value=this.value;
+
+const filtered=value?labourData.filter(l=>l.state===value):labourData;
+
+render(filtered);
+
+});
+
+function openProfile(labour){
+
+currentLabour=labour;
+
+document.getElementById("profilePanel").classList.add("active");
+
+document.getElementById("pImg").src=`https://randomuser.me/api/portraits/men/${labour.img}.jpg`;
+document.getElementById("pName").innerText=labour.name;
+document.getElementById("pSkill").innerText=labour.skill;
+document.getElementById("pState").innerText="State: "+labour.state;
+document.getElementById("pBudget").innerText="Budget: ₹"+labour.budget+"/day";
+
+}
+
+function closeProfile(){
+document.getElementById("profilePanel").classList.remove("active");
+}
+
+function goHome(){
+window.location.href="index.html";
+}
+
+function hireLabour(name, skill){
+
+let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+let labourList = JSON.parse(localStorage.getItem("labourData")) || labourData;
+
+let labour = labourList.find(l => l.name === name);
+
+if(labour.status === "busy"){
+alert("❌ Labour already working on another job");
+return;
+}
+
+labour.status = "busy";
+
+jobs.push({
+labour:name,
+skill:skill,
+status:"ongoing",
+date:new Date().toLocaleString()
+});
+
+localStorage.setItem("jobs", JSON.stringify(jobs));
+localStorage.setItem("labourData", JSON.stringify(labourList));
+
+alert("✅ Labour hired successfully");
+
+}
+
+let data=JSON.parse(localStorage.getItem("labourHire"))||[];
+data.push(obj);
+localStorage.setItem("labourHire",JSON.stringify(data));
+
+alert("Labour Hire Request Saved ✅");
+
+
+const obj = {
+ name,
+ skill,
+ state,
+ img,
+ budget,
+ status: "available"
+};
+function completeJob(name){
+
+let labourList = JSON.parse(localStorage.getItem("labourData")) || labourData;
+
+let labour = labourList.find(l => l.name === name);
+
+labour.status = "available";
+
+localStorage.setItem("labourData", JSON.stringify(labourList));
+
+alert("✅ Job marked complete");
+
+closeProfile();
+
+}
+
+</script>
+
+</body>
+</html>

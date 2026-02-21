@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KaamSetu Dashboard</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+
+<style>
+
+:root{
+--bg:#0f2027;
+--card:#203a43;
+--text:white;
+}
+
+.light{
+--bg:#f4f6f9;
+--card:white;
+--text:#222;
+}
+
+body{
+margin:0;
+font-family:"Segoe UI",sans-serif;
+background:var(--bg);
+color:var(--text);
+display:flex;
+height:100vh;
+transition:0.4s;
+overflow:hidden;
+}
+
+/* MOBILE MENU BUTTON */
+
+.menu-btn{
+display:none;
+position:fixed;
+top:15px;
+left:15px;
+font-size:22px;
+background:var(--card);
+padding:8px 12px;
+border-radius:8px;
+cursor:pointer;
+z-index:1000;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:220px;
+background:var(--card);
+padding:20px;
+display:flex;
+flex-direction:column;
+gap:15px;
+transition:.3s;
+}
+
+.sidebar h2{
+text-align:center;
+}
+
+.sidebar button{
+padding:12px;
+border:none;
+border-radius:10px;
+background:rgba(255,255,255,0.1);
+color:var(--text);
+cursor:pointer;
+transition:0.3s;
+}
+
+.sidebar button:hover{
+transform:translateX(5px);
+}
+
+/* CONTENT */
+
+.content{
+flex:1;
+padding:30px;
+overflow:auto;
+animation:fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+/* PROFILE */
+
+.profile{
+text-align:center;
+}
+
+.profile img{
+width:120px;
+height:120px;
+border-radius:50%;
+border:4px solid #00e5ff;
+object-fit:cover;
+}
+
+input,select,textarea{
+width:100%;
+padding:10px;
+margin:8px 0;
+border-radius:8px;
+border:none;
+}
+
+.saveBtn{
+background:linear-gradient(45deg,#00e5ff,#0072ff);
+color:white;
+cursor:pointer;
+}
+
+/* MOBILE STYLES */
+
+@media(max-width:768px){
+
+.menu-btn{
+display:block;
+}
+
+.sidebar{
+position:fixed;
+left:-240px;
+top:0;
+height:100%;
+z-index:999;
+}
+
+.sidebar.active{
+left:0;
+}
+
+body{
+flex-direction:column;
+}
+
+.content{
+padding:70px 15px 20px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="menu-btn" onclick="toggleSidebar()">☰</div>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar" id="sidebar">
+
+<h2>KaamSetu</h2>
+
+<button onclick="showSection('profile')">Profile</button>
+<button onclick="showSection('edit')">Edit Profile</button>
+<button onclick="showSection('settings')">Settings</button>
+<button onclick="showSection('help')">Help Desk</button>
+<button onclick="window.location.href='feedback.html'">Feedback</button>
+<button onclick="logout()">Logout</button>
+<button onclick="toggleMode()">🌙 Toggle Mode</button>
+
+</div>
+
+<!-- CONTENT -->
+
+<div class="content">
+
+<!-- PROFILE VIEW -->
+
+<div id="profile" class="section">
+<div class="profile">
+<img id="profilePic" src="https://i.pravatar.cc/150">
+<h2 id="username">User</h2>
+<p id="email"></p>
+</div>
+</div>
+
+<!-- EDIT PROFILE -->
+
+<div id="edit" class="section" style="display:none">
+
+<h2>Edit Profile</h2>
+
+<input type="text" id="nameInput" placeholder="Name">
+<input type="email" id="emailInput" placeholder="Email">
+<input type="file" id="photoInput">
+
+<button class="saveBtn" onclick="saveProfile()">Save Changes</button>
+
+</div>
+
+<!-- SETTINGS -->
+
+<div id="settings" class="section" style="display:none">
+<h2>Settings</h2>
+<p>More settings coming soon ⚙️</p>
+</div>
+
+<!-- HELP -->
+
+<div id="help" class="section" style="display:none">
+<h2>Help Desk</h2>
+<p>Email support@kaamsetu.com</p>
+</div>
+
+</div>
+
+<script>
+
+// SIDEBAR TOGGLE
+
+function toggleSidebar(){
+document.getElementById("sidebar").classList.toggle("active");
+}
+
+// LOAD USER
+
+let user = JSON.parse(localStorage.getItem("kaamsetuUser")) || {};
+
+if(user.name){
+document.getElementById("username").innerText = user.name;
+document.getElementById("email").innerText = user.email;
+document.getElementById("nameInput").value = user.name;
+document.getElementById("emailInput").value = user.email;
+}
+
+if(user.photo){
+document.getElementById("profilePic").src = user.photo;
+}
+
+// SWITCH SECTIONS
+
+function showSection(id){
+document.querySelectorAll(".section").forEach(sec=>sec.style.display="none");
+document.getElementById(id).style.display="block";
+}
+
+// SAVE PROFILE
+
+function saveProfile(){
+
+user.name = document.getElementById("nameInput").value;
+user.email = document.getElementById("emailInput").value;
+
+const file = document.getElementById("photoInput").files[0];
+
+if(file){
+const reader = new FileReader();
+reader.onload = function(){
+user.photo = reader.result;
+localStorage.setItem("kaamsetuUser", JSON.stringify(user));
+location.reload();
+}
+reader.readAsDataURL(file);
+}else{
+localStorage.setItem("kaamsetuUser", JSON.stringify(user));
+location.reload();
+}
+
+}
+
+// DARK LIGHT MODE
+
+function toggleMode(){
+document.body.classList.toggle("light");
+}
+
+// LOGOUT
+
+function logout(){
+
+localStorage.removeItem("isRegistered");
+localStorage.removeItem("kaamsetuUser");
+
+alert("Logged Out Successfully 👋");
+
+window.location.href = "index.html";
+
+}
+
+</script>
+
+</body>
+</html>

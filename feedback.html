@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback - KaamSetu</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Segoe UI",sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+}
+
+/* CONTAINER */
+
+.container{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+padding:40px;
+border-radius:20px;
+width:100%;
+max-width:500px;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+background:linear-gradient(45deg,#00e5ff,#fff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+/* INPUTS */
+
+input, textarea{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:10px;
+background:rgba(255,255,255,0.15);
+color:white;
+}
+
+textarea{
+resize:none;
+height:90px;
+}
+
+input::placeholder,
+textarea::placeholder{
+color:#ddd;
+}
+
+/* STAR RATING */
+
+.stars{
+display:flex;
+justify-content:center;
+gap:8px;
+margin:15px 0;
+font-size:28px;
+cursor:pointer;
+}
+
+.star{
+color:#aaa;
+transition:0.3s;
+}
+
+.star.active{
+color:#FFD700;
+}
+
+/* BUTTONS */
+
+.buttons{
+display:flex;
+justify-content:space-between;
+margin-top:20px;
+}
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:50px;
+cursor:pointer;
+font-size:14px;
+transition:0.3s;
+}
+
+.submit{
+background:linear-gradient(45deg,#00e5ff,#0072ff);
+color:white;
+}
+
+.submit:hover{
+transform:scale(1.05);
+box-shadow:0 0 15px rgba(0,229,255,0.6);
+}
+
+.back{
+background:#555;
+color:white;
+}
+
+.back:hover{
+background:#777;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Give Your Feedback</h2>
+
+<input type="text" placeholder="Your Name" id="name">
+<input type="email" placeholder="Your Email" id="email">
+
+<textarea placeholder="Your Feedback" id="feedback"></textarea>
+
+<!-- STAR RATING -->
+<div class="stars">
+<span class="star" data-value="1">★</span>
+<span class="star" data-value="2">★</span>
+<span class="star" data-value="3">★</span>
+<span class="star" data-value="4">★</span>
+<span class="star" data-value="5">★</span>
+</div>
+
+<textarea placeholder="Any suggestions to improve?" id="suggestion"></textarea>
+
+<div class="buttons">
+<button class="back" onclick="goHome()">⬅ Back</button>
+<button class="submit" onclick="submitFeedback()">Submit</button>
+</div>
+
+</div>
+
+<script>
+
+let rating = 0;
+
+const stars = document.querySelectorAll(".star");
+
+stars.forEach(star => {
+star.addEventListener("click", () => {
+rating = star.getAttribute("data-value");
+
+stars.forEach(s => s.classList.remove("active"));
+
+for(let i=0; i<rating; i++){
+stars[i].classList.add("active");
+}
+});
+});
+
+function submitFeedback(){
+
+const name = document.getElementById("name").value;
+const email = document.getElementById("email").value;
+const feedback = document.getElementById("feedback").value;
+const suggestion = document.getElementById("suggestion").value;
+
+if(name === "" || email === "" || feedback === "" || rating === 0){
+alert("Please fill all required fields ⭐");
+return;
+}
+
+alert("✅ Thank you for your feedback!");
+
+window.location.href = "index.html";
+
+}
+
+function goHome(){
+window.location.href = "index.html";
+}
+
+let feedback = JSON.parse(localStorage.getItem("kaamsetuFeedback")) || [];
+feedback.push({
+name:name.value,
+email:email.value,
+message:feedbackText.value
+});
+localStorage.setItem("kaamsetuFeedback", JSON.stringify(feedback));
+
+document.getElementById("feedbackForm").addEventListener("submit", function(e){
+e.preventDefault();
+
+const feedback = {
+name: document.getElementById("name").value,
+email: document.getElementById("email").value,
+rating: document.querySelector('input[name="star"]:checked')?.value,
+suggestion: document.getElementById("suggestion").value
+};
+
+let list = JSON.parse(localStorage.getItem("kaamsetuFeedback")) || [];
+list.push(feedback);
+localStorage.setItem("kaamsetuFeedback", JSON.stringify(list));
+
+alert("Feedback Submitted ⭐");
+});
+
+fetch("http://127.0.0.1:8000/feedback",{
+method:"POST",
+body:new FormData(document.getElementById("feedbackForm"))
+})
+</script>
+
+
+</body>
+</html>

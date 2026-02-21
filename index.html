@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KaamSetu</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:"Segoe UI",sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+overflow-x:hidden;
+}
+
+/* NAVBAR */
+
+.navbar{
+position:fixed;
+top:0;
+width:100%;
+padding:15px 20px;
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(12px);
+z-index:1000;
+}
+
+.nav-container{
+max-width:1200px;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:space-between;
+position:relative;
+}
+
+.brand{
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+align-items:center;
+gap:8px;
+font-size:22px;
+font-weight:bold;
+}
+
+.brand img{
+width:38px;
+}
+
+.nav-links{
+list-style:none;
+display:flex;
+gap:20px;
+}
+
+.nav-links a{
+text-decoration:none;
+color:white;
+font-size:16px;
+transition:0.3s;
+}
+
+.nav-links a:hover{
+color:#00e5ff;
+}
+
+#dashboardMenu{
+display:none;
+font-size:24px;
+cursor:pointer;
+}
+
+/* HERO */
+
+.hero{
+min-height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:100px 20px 40px;
+}
+
+.hero-logo{
+width:110px;
+margin-bottom:15px;
+filter: drop-shadow(0 0 15px rgba(0,229,255,0.7));
+animation: floatLogo 3s ease-in-out infinite;
+}
+
+@keyframes floatLogo{
+0%{ transform: translateY(0px); }
+50%{ transform: translateY(-10px); }
+100%{ transform: translateY(0px); }
+}
+
+.hero h1{
+font-size:60px;
+background:linear-gradient(45deg,#00e5ff,#fff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.hero p{
+opacity:0.85;
+margin:15px 0 25px;
+font-size:18px;
+}
+
+#getStartedBtn {
+padding:14px 35px;
+font-size:17px;
+border-radius:50px;
+border:none;
+cursor:pointer;
+color:white;
+background:linear-gradient(135deg,#00e0ff,#007bff);
+box-shadow:0 10px 25px rgba(0,140,255,0.4);
+animation:pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow{
+0%{box-shadow:0 0 0 rgba(0,140,255,0.5);}
+50%{box-shadow:0 0 25px rgba(0,140,255,0.8);}
+100%{box-shadow:0 0 0 rgba(0,140,255,0.5);}
+}
+
+.optionBtn{
+padding:12px 25px;
+margin:8px;
+border-radius:30px;
+border:none;
+background:linear-gradient(135deg,#00e0ff,#007bff);
+color:white;
+cursor:pointer;
+}
+
+#userInfo{
+margin-top:15px;
+font-size:17px;
+display:none;
+}
+
+footer{
+text-align:center;
+padding:25px;
+opacity:0.6;
+}
+
+/* 📱 MOBILE */
+
+@media (max-width:768px){
+
+.nav-links{
+display:none;
+}
+
+#dashboardMenu{
+display:block;
+}
+
+.brand{
+font-size:20px;
+}
+
+.hero h1{
+font-size:42px;
+}
+
+.hero-logo{
+width:90px;
+}
+
+#getStartedBtn{
+width:90%;
+}
+
+.optionBtn{
+width:90%;
+}
+
+}
+
+/* 📱 SMALL MOBILE */
+
+@media (max-width:480px){
+
+.hero h1{
+font-size:34px;
+}
+
+.hero p{
+font-size:16px;
+}
+/* CHAT BUTTON */
+
+#chatToggle{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#00e5ff;
+color:#000;
+padding:15px;
+border-radius:50%;
+cursor:pointer;
+font-size:20px;
+z-index:999;
+box-shadow:0 5px 20px rgba(0,0,0,0.3);
+}
+
+/* FLOATING BUTTON */
+
+#chatToggle{
+position:fixed;
+bottom:25px;
+right:25px;
+width:60px;
+height:60px;
+background:linear-gradient(135deg,#00e5ff,#007bff);
+color:white;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:26px;
+cursor:pointer;
+z-index:999;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+transition:0.3s;
+}
+
+#chatToggle:hover{
+transform:scale(1.1);
+}
+
+/* CHAT WINDOW */
+
+#chatbot{
+position:fixed;
+bottom:100px;
+right:25px;
+width:320px;
+height:420px;
+background:rgba(28,46,53,0.7);
+backdrop-filter:blur(15px);
+border-radius:18px;
+overflow:hidden;
+display:none;
+flex-direction:column;
+z-index:999;
+box-shadow:0 20px 40px rgba(0,0,0,0.5);
+animation:fadeInChat 0.3s ease;
+}
+
+@keyframes fadeInChat{
+from{opacity:0; transform:translateY(20px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+/* HEADER */
+
+#chatHeader{
+background:linear-gradient(135deg,#00e5ff,#007bff);
+color:white;
+padding:12px;
+font-weight:bold;
+text-align:center;
+font-size:16px;
+}
+
+/* BODY */
+
+#chatBody{
+flex:1;
+padding:12px;
+overflow-y:auto;
+display:flex;
+flex-direction:column;
+gap:6px;
+}
+
+/* INPUT AREA */
+
+.chatInputArea{
+display:flex;
+background:#111;
+padding:8px;
+}
+
+.chatInputArea input{
+flex:1;
+padding:10px;
+border:none;
+border-radius:8px;
+outline:none;
+background:#222;
+color:white;
+}
+
+.chatInputArea button{
+margin-left:6px;
+padding:10px 14px;
+border:none;
+border-radius:8px;
+background:linear-gradient(135deg,#00e5ff,#007bff);
+color:white;
+cursor:pointer;
+}
+
+/* MESSAGES */
+
+.message{
+max-width:75%;
+padding:8px 12px;
+border-radius:12px;
+font-size:14px;
+line-height:1.4;
+}
+
+.user{
+background:linear-gradient(135deg,#007bff,#00e5ff);
+align-self:flex-end;
+}
+
+.bot{
+background:#333;
+align-self:flex-start;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+<div class="nav-container">
+
+<ul class="nav-links" id="authButtons">
+<li><a href="login.html">Login</a></li>
+<li><a href="register.html">Register</a></li>
+</ul>
+
+<div class="brand">
+<img src="logo.png">
+KaamSetu
+</div>
+
+<ul class="nav-links">
+<li><a href="service.html">Services</a></li>
+<li><a href="feedback.html">Feedback</a></li>
+<li><a href="payment.html">Payment</a></li>
+<li><a href="complaint.html">Complaint</a></li>
+</ul>
+
+<div id="dashboardMenu" onclick="window.location.href='dashboard.html'">☰</div>
+
+</div>
+</nav>
+
+<section class="hero">
+
+<img src="logo.png" class="hero-logo">
+
+<h1>KaamSetu</h1>
+<p>India’s Smart Labour Connection Platform</p>
+
+<button id="getStartedBtn" onclick="window.location.href='register.html'">Get Started</button>
+
+<div id="userOptions" style="display:none;">
+<button class="optionBtn" onclick="window.location.href='labour.html'">As Client</button>
+<button class="optionBtn" onclick="window.location.href='client.html'">As Labour</button>
+</div>
+
+<div id="userInfo"></div>
+
+</section>
+
+<footer>
+© 2026 KaamSetu • Built for India 🇮🇳
+</footer>
+<!-- FLOATING CHAT -->
+
+<div id="chatbot">
+  <div id="chatHeader">🤖 KaamSetu Assistant</div>
+
+  <div id="chatBody"></div>
+
+  <div class="chatInputArea">
+    <input type="text" id="userInput" placeholder="Type your message...">
+    <button onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<div id="chatToggle" onclick="toggleChat()">💬</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+const user = JSON.parse(localStorage.getItem("kaamsetuUser"));
+
+if(user){
+
+document.getElementById("getStartedBtn").style.display="none";
+document.getElementById("userOptions").style.display="block";
+document.getElementById("authButtons").style.display="none";
+document.getElementById("dashboardMenu").style.display="block";
+
+const info=document.getElementById("userInfo");
+info.style.display="block";
+info.innerHTML=`Welcome, ${user.name} 👋`;
+
+}
+
+});
+function toggleChat(){
+const chat=document.getElementById("chatbot");
+chat.style.display = chat.style.display === "flex" ? "none" : "flex";
+chat.style.flexDirection="column";
+}
+
+function sendMessage(){
+
+const input=document.getElementById("userInput");
+const msg=input.value.trim();
+
+if(!msg) return;
+
+addMessage(msg,"user");
+
+const reply = botReply(msg.toLowerCase());
+
+setTimeout(()=>addMessage(reply,"bot"),500);
+
+input.value="";
+}
+
+function addMessage(text,type){
+
+const div=document.createElement("div");
+div.className="message "+type;
+div.innerText=text;
+
+document.getElementById("chatBody").appendChild(div);
+document.getElementById("chatBody").scrollTop=9999;
+
+}
+
+function botReply(msg){
+
+msg = msg.toLowerCase();
+
+/// GREETINGS
+if(msg.includes("hello") || msg.includes("hi") || msg.includes("hey") || msg.includes("namaste") || msg.includes("good morning") || msg.includes("good evening"))
+return "Hello 👋 Welcome to KaamSetu! How can I help you today?";
+
+/// HELP
+if(msg.includes("help") || msg.includes("support") || msg.includes("assist") || msg.includes("guide") || msg.includes("how to use"))
+return "I can help you hire workers, find jobs, manage bookings, and answer questions.";
+
+
+/// HIRING
+if(msg.includes("hire") || msg.includes("book worker") || msg.includes("need worker") || msg.includes("find worker") || msg.includes("want labour") || msg.includes("get worker"))
+return "👉 Go to Labour page to hire workers.";
+
+
+/// LABOUR TYPES
+if(msg.includes("plumber"))
+return "🔧 You can hire a plumber from Labour section.";
+
+if(msg.includes("electrician"))
+return "⚡ You can hire an electrician from Labour section.";
+
+if(msg.includes("carpenter"))
+return "🪚 Carpenter available in Labour section.";
+
+if(msg.includes("painter"))
+return "🎨 Painter available in Labour section.";
+
+if(msg.includes("cleaner") || msg.includes("cleaning"))
+return "🧹 Cleaner available in Labour section.";
+
+if(msg.includes("mechanic"))
+return "🔩 Mechanic available in Labour section.";
+
+if(msg.includes("driver"))
+return "🚗 Driver available in Labour section.";
+
+
+/// CLIENT
+if(msg.includes("client") || msg.includes("find client") || msg.includes("get work") || msg.includes("jobs"))
+return "👉 You can find clients in Client section.";
+
+
+/// PROFILE
+if(msg.includes("profile") || msg.includes("edit profile") || msg.includes("update profile"))
+return "👉 Go to Profile page to update your details.";
+
+
+/// LOGIN
+if(msg.includes("login") || msg.includes("sign in") || msg.includes("log in"))
+return "👉 Click Login button on homepage.";
+
+
+/// REGISTER
+if(msg.includes("register") || msg.includes("sign up") || msg.includes("create account"))
+return "👉 Click Register to create new account.";
+
+
+/// PASSWORD
+if(msg.includes("forgot password") || msg.includes("reset password"))
+return "👉 Password reset feature coming soon.";
+
+
+/// PAYMENT
+if(msg.includes("payment") || msg.includes("pay") || msg.includes("charges") || msg.includes("price") || msg.includes("fees"))
+return "💳 Payment depends on worker and service.";
+
+
+/// LOCATION
+if(msg.includes("location") || msg.includes("near me") || msg.includes("area"))
+return "📍 Workers available based on your location.";
+
+
+/// BOOKING
+if(msg.includes("booking") || msg.includes("my booking") || msg.includes("check booking"))
+return "📋 You can check bookings in dashboard.";
+
+
+/// CANCEL
+if(msg.includes("cancel") || msg.includes("cancel booking"))
+return "❌ Go to booking section to cancel.";
+
+
+/// CONTACT
+if(msg.includes("contact") || msg.includes("customer care") || msg.includes("call"))
+return "📞 Contact support at support@kaamsetu.com";
+
+
+/// ABOUT
+if(msg.includes("about") || msg.includes("what is kaamsetu") || msg.includes("info"))
+return "KaamSetu connects workers with clients easily.";
+
+
+/// SAFETY
+if(msg.includes("safe") || msg.includes("security"))
+return "🔐 Your data is secure with us.";
+
+
+/// APP FEATURES
+if(msg.includes("features") || msg.includes("what can you do"))
+return "You can hire workers, find jobs, manage bookings and chat.";
+
+
+/// WORKER QUESTIONS
+if(msg.includes("become worker") || msg.includes("join as worker"))
+return "👉 Register and select profession to join.";
+
+if(msg.includes("salary") || msg.includes("earnings") || msg.includes("income"))
+return "💰 Earnings depend on work and clients.";
+
+
+/// DASHBOARD
+if(msg.includes("dashboard"))
+return "📊 Go to dashboard to see your activity.";
+
+
+/// TIME
+if(msg.includes("available time") || msg.includes("working hours"))
+return "⏰ Workers availability depends on schedule.";
+
+
+/// RATINGS
+if(msg.includes("rating") || msg.includes("review"))
+return "⭐ You can see ratings on worker profile.";
+
+
+/// DELETE ACCOUNT
+if(msg.includes("delete account") || msg.includes("remove account"))
+return "👉 Contact support to delete account.";
+
+
+/// LANGUAGE
+if(msg.includes("language") || msg.includes("hindi") || msg.includes("english"))
+return "🌐 Multi language support coming soon.";
+
+
+/// THANKS
+if(msg.includes("thanks") || msg.includes("thank you"))
+return "😊 You're welcome!";
+
+
+/// BYE
+if(msg.includes("bye") || msg.includes("goodbye"))
+return "👋 Have a great day!";
+
+
+/// DEFAULT
+return "🤖 I didn’t understand. Try asking about hiring, jobs, booking, or services.";
+
+}
+
+</script>
+
+</body>
+</html>

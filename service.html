@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KaamSetu Services</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Segoe UI",sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+}
+
+/* HEADER */
+
+header{
+text-align:center;
+padding:40px 20px;
+}
+
+header h1{
+font-size:40px;
+margin-bottom:10px;
+background:linear-gradient(45deg,#00e5ff,#fff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+header p{
+opacity:0.8;
+}
+
+/* SERVICES GRID */
+
+.services{
+padding:40px 8%;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:25px;
+}
+
+.card{
+background: rgba(255,255,255,0.08);
+backdrop-filter: blur(12px);
+border-radius: 22px;
+padding: 30px;
+text-align: center;
+transition: all .4s ease;
+cursor: pointer;
+position: relative;
+overflow: hidden;
+}
+
+/* Hover effect */
+.card:hover{
+transform: translateY(-10px) scale(1.02);
+background: rgba(255,255,255,0.15);
+box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+}
+
+/* ICON */
+.card i{
+font-size: 70px;   /* 👈 icon bada */
+margin-bottom: 15px;
+display: inline-block;
+animation: floatIcon 3s ease-in-out infinite;
+color: #4fd1ff;
+}
+
+/* Floating animation */
+@keyframes floatIcon{
+0%{ transform: translateY(0px);}
+50%{ transform: translateY(-10px);}
+100%{ transform: translateY(0px);}
+}
+
+/* Title */
+.card h3{
+margin-bottom: 8px;
+font-size: 24px;
+font-weight: 600;
+color: white;
+}
+
+/* Description text agar ho */
+.card p{
+font-size: 16px;
+opacity: 0.9;
+color: #e0f7fa;
+}
+
+/* Click effect */
+.card:active{
+transform: scale(0.97);
+}
+
+
+/* TRUST SECTION */
+
+.trust{
+margin-top:60px;
+padding:60px 10%;
+background:rgba(0,0,0,0.3);
+text-align:center;
+}
+
+.trust h2{
+font-size:32px;
+margin-bottom:20px;
+}
+
+.trust ul{
+list-style:none;
+max-width:600px;
+margin:auto;
+text-align:left;
+line-height:1.8;
+}
+
+.trust li::before{
+content:"✔ ";
+color:#00e5ff;
+}
+
+/* BACK BUTTON */
+
+.back-btn{
+display:block;
+margin:40px auto;
+padding:14px 40px;
+border:none;
+border-radius:50px;
+background:linear-gradient(45deg,#00e5ff,#0072ff);
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.back-btn:hover{
+transform:scale(1.08);
+box-shadow:0 0 20px rgba(0,229,255,0.6);
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Our Services</h1>
+<p>Choose from a wide range of trusted professionals</p>
+</header>
+
+<section class="services">
+
+<div class="card" onclick="window.location.href='plumber.html'">
+<i class="fa-solid fa-faucet-drip"></i>
+<h3>Plumbing</h3>
+<p>Leak fixing & pipe installation</p>
+</div>
+
+<div class="card" onclick="window.location.href='electrician.html'">
+<i class="fa-solid fa-plug-circle-bolt"></i>
+<h3>Electrician</h3>
+<p>Electrical repair & wiring</p>
+</div>
+
+<div class="card">
+<i class="fa-solid fa-hammer"></i>
+<h3>Carpenter</h3>
+<p>Furniture & wood work</p>
+</div>
+
+<div class="card">
+<i class="fa-solid fa-glasses"></i>
+<h3>Welder</h3>
+<p>Metal welding services</p>
+</div>
+
+<div class="card">
+<i class="fa-solid fa-fan"></i>
+<h3>AC Repair</h3>
+<p>AC installation & service</p>
+</div>
+
+<div class="card">
+<i class="fa-solid fa-door-closed"></i>
+<h3>Refrigerator Repair</h3>
+<p>Cooling system repair</p>
+</div>
+
+<div class="card">
+<i class="fa-solid fa-fire-flame-curved"></i>
+<h3>Gas Pipeline Repair</h3>
+<p>Safe gas line fixing</p>
+</div>
+
+<div class="card">
+<i class="fa-solid fa-lock"></i>
+<h3>Lock Repair</h3>
+<p>Lock installation & fixing</p>
+</div>
+
+<div class="card">
+<i class="fa-brands fa-microsoft"></i>
+<h3>Glass Repair</h3>
+<p>Window & glass replacement</p>
+</div>
+
+<div class="card">
+<i class="fa-solid fa-taxi"></i>
+<h3>Driver</h3>
+<p>Professional driving services</p>
+</div>
+
+<div class="card">
+<i class="fa-solid fa-trowel"></i>
+<h3>Gardener</h3>
+<p>Garden care & maintenance</p>
+</div>
+
+<div class="card">
+<i class="fa-solid fa-kitchen-set"></i>
+<h3>Chef</h3>
+<p>Home & event cooking services</p>
+</div>
+
+</section>
+
+<section class="trust">
+<h2>Why Trust KaamSetu?</h2>
+
+<ul>
+<li>All workers are identity verified</li>
+<li>Background checked professionals</li>
+<li>Transparent pricing system</li>
+<li>Fast service response</li>
+<li>Secure communication</li>
+<li>Customer support available</li>
+<li>Trusted by thousands of users</li>
+<li>Safe hiring experience</li>
+<li>Quality service guarantee</li>
+<li>Easy booking process</li>
+</ul>
+
+</section>
+
+<button class="back-btn" onclick="window.location.href='index.html'">
+⬅ Back to Home
+</button>
+
+</body>
+</html>

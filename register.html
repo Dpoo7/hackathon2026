@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register</title>
+
+<style>
+body {
+font-family: Arial, sans-serif;
+background: linear-gradient(135deg,#667eea,#764ba2);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container {
+background:#fff;
+padding:30px;
+width:420px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+h2 { text-align:center; }
+
+input {
+width:100%;
+padding:10px;
+margin:8px 0;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button {
+padding:10px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+background:#667eea;
+color:white;
+width:100%;
+}
+
+.strength {
+height:6px;
+border-radius:5px;
+background:#eee;
+margin-top:4px;
+}
+
+.strength-bar {
+height:100%;
+width:0%;
+border-radius:5px;
+transition:0.3s;
+}
+
+.popup {
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%) scale(0);
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
+text-align:center;
+transition:0.3s;
+}
+
+.popup.show { transform:translate(-50%,-50%) scale(1); }
+.check { font-size:50px; color:green; }
+
+small{color:red;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>User Registration</h2>
+
+<form id="registerForm">
+
+<input type="text" id="name" placeholder="Full Name" required>
+<input type="tel" id="phone" placeholder="Mobile Number" required>
+<small id="phoneError"></small>
+
+<input type="date" id="dob" required>
+
+<input type="text" id="profession" placeholder="Profession" required>
+
+<input type="email" id="email" placeholder="Email" required>
+<small id="emailError"></small>
+
+<input type="password" id="password" placeholder="Password" required>
+
+<div class="strength">
+<div class="strength-bar" id="strengthBar"></div>
+</div>
+
+<button type="submit">Register Now</button>
+
+</form>
+</div>
+
+<div class="popup" id="popup">
+<div class="check">✅</div>
+<h3>Registration Successful</h3>
+</div>
+
+<script>
+
+// PASSWORD STRENGTH
+const password = document.getElementById("password");
+const strengthBar = document.getElementById("strengthBar");
+
+password.addEventListener("input", ()=>{
+let val = password.value;
+let strength = 0;
+
+if(val.length > 5) strength += 25;
+if(/[A-Z]/.test(val)) strength += 25;
+if(/[0-9]/.test(val)) strength += 25;
+if(/[^A-Za-z0-9]/.test(val)) strength += 25;
+
+strengthBar.style.width = strength + "%";
+strengthBar.style.background =
+strength <=25 ? "red" :
+strength <=50 ? "orange" :
+strength <=75 ? "yellowgreen" : "green";
+});
+
+// FORM SUBMIT
+
+document.getElementById("registerForm").addEventListener("submit", async function(e){
+
+e.preventDefault();
+
+const name = document.getElementById("name").value;
+const phone = document.getElementById("phone").value;
+const dob = document.getElementById("dob").value;
+const profession = document.getElementById("profession").value;
+const email = document.getElementById("email").value;
+const passwordVal = document.getElementById("password").value;
+
+// VALIDATION
+
+let phoneValid = /^[0-9]{10}$/.test(phone);
+let emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+document.getElementById("phoneError").innerText = phoneValid ? "" : "Enter valid 10 digit number";
+document.getElementById("emailError").innerText = emailValid ? "" : "Invalid email";
+
+if(!phoneValid || !emailValid) return;
+
+const user = { name, phone, dob, profession, email, password: passwordVal };
+
+// LOCAL SAVE
+localStorage.setItem("kaamsetuUser", JSON.stringify(user));
+
+// BACKEND CALL
+
+try{
+
+const res = await fetch("http://127.0.0.1:8000/register",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body: JSON.stringify(user)
+});
+
+const data = await res.json();
+
+document.getElementById("popup").classList.add("show");
+
+setTimeout(()=> window.location.href="index.html",2000);
+
+}catch(err){
+alert("Backend not connected ❌");
+console.error(err);
+}
+
+});
+
+</script>
+
+</body>
+</html>

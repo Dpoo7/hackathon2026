@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complaint - KaamSetu</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+}
+
+.container{
+background:#ffffff15;
+backdrop-filter:blur(10px);
+padding:30px;
+border-radius:12px;
+width:90%;
+max-width:420px;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+h2{
+text-align:center;
+margin-bottom:15px;
+}
+
+input, select, textarea{
+width:100%;
+padding:10px;
+margin:8px 0;
+border-radius:8px;
+border:none;
+outline:none;
+}
+
+textarea{
+resize:none;
+height:100px;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+margin-top:10px;
+}
+
+.submit{
+background:#00c853;
+color:white;
+}
+
+.home{
+background:#ff5252;
+color:white;
+}
+
+.popup{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%) scale(0);
+background:white;
+color:black;
+padding:25px;
+border-radius:10px;
+text-align:center;
+transition:.3s;
+}
+
+.popup.show{
+transform:translate(-50%,-50%) scale(1);
+}
+
+.check{
+font-size:40px;
+color:green;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Submit Complaint</h2>
+
+<form id="complaintForm">
+
+<input type="text" id="name" placeholder="Your Name" required>
+
+<select id="category" required>
+<option value="">Select Issue</option>
+<option>Payment Issue</option>
+<option>Worker Problem</option>
+<option>Client Problem</option>
+<option>App Bug</option>
+<option>Other</option>
+</select>
+
+<textarea id="message" placeholder="Describe your complaint..." required></textarea>
+
+<button type="submit" class="submit">Submit Complaint</button>
+
+<button type="button" class="home" onclick="goHome()">Back to Home</button>
+
+</form>
+
+</div>
+
+<div class="popup" id="popup">
+<div class="check">✅</div>
+<h3>Complaint Submitted</h3>
+<p>Our team will contact you soon</p>
+</div>
+
+<script>
+
+document.getElementById("complaintForm").addEventListener("submit", function(e){
+
+e.preventDefault();
+
+const complaint={
+name: document.getElementById("name").value,
+category: document.getElementById("category").value,
+message: document.getElementById("message").value,
+date: new Date().toLocaleString()
+};
+
+let data=JSON.parse(localStorage.getItem("complaints"))||[];
+data.push(complaint);
+localStorage.setItem("complaints",JSON.stringify(data));
+
+document.getElementById("popup").classList.add("show");
+
+setTimeout(()=>{
+window.location.href="index.html";
+},2000);
+
+});
+
+function goHome(){
+window.location.href="index.html";
+}
+
+</script>
+
+</body>
+</html>

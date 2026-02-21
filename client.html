@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Clients - KaamSetu</title>
+
+<style>
+
+*{box-sizing:border-box;}
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+}
+
+.header{
+display:flex;
+align-items:center;
+justify-content:center;
+position:relative;
+padding:18px;
+font-size:26px;
+font-weight:bold;
+}
+
+.back-home{
+position:absolute;
+left:15px;
+padding:8px 14px;
+border:none;
+border-radius:8px;
+background:#ff5252;
+color:white;
+cursor:pointer;
+}
+
+.controls{
+display:flex;
+justify-content:center;
+gap:12px;
+padding:0 15px;
+flex-wrap:wrap;
+margin-bottom:15px;
+}
+
+input,select{
+padding:10px;
+border-radius:8px;
+border:none;
+width:220px;
+}
+
+.client-list{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:15px;
+padding:15px;
+}
+
+.card{
+background:#ffffff15;
+border-radius:12px;
+padding:12px;
+text-align:center;
+cursor:pointer;
+transition:.3s;
+}
+
+.card:hover{
+transform:scale(1.05);
+background:#ffffff25;
+}
+
+.card img{
+width:70px;
+height:70px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.profile{
+position:fixed;
+top:0;
+right:-100%;
+width:100%;
+max-width:350px;
+height:100%;
+background:#1c2e35;
+padding:20px;
+transition:.4s;
+overflow:auto;
+z-index:1000;
+}
+
+.profile.active{ right:0; }
+
+.profile img{
+width:100px;
+border-radius:50%;
+}
+
+.badge{
+background:#007bff;
+padding:5px 10px;
+border-radius:20px;
+display:inline-block;
+margin-top:5px;
+}
+
+.status{
+margin-top:6px;
+font-weight:bold;
+}
+
+.busy{ color:#ff5252; }
+.available{ color:#00e676; }
+
+button{
+padding:10px;
+margin-top:10px;
+width:100%;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:15px;
+}
+
+.apply{background:#00c853;color:white;}
+.chat{background:#2196f3;color:white;}
+.back{background:#ff5252;color:white;}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<button class="back-home" onclick="goHome()">⬅ Back</button>
+Find Clients
+</div>
+
+<div class="controls">
+<input type="text" id="search" placeholder="Search client">
+<select id="stateFilter">
+<option value="">All Locations</option>
+<option>Delhi</option>
+<option>Mumbai</option>
+<option>Pune</option>
+<option>Bangalore</option>
+<option>Ahmedabad</option>
+<option>Jaipur</option>
+<option>Lucknow</option>
+<option>Chennai</option>
+<option>Kolkata</option>
+</select>
+</div>
+
+<div class="client-list" id="clientList"></div>
+
+<div class="profile" id="profilePanel">
+<img id="pImg">
+<h2 id="pName"></h2>
+<span class="badge" id="pCategory"></span>
+
+<p id="pStatus" class="status"></p>
+
+<p id="pState"></p>
+<p id="pBudget"></p>
+<p id="pDesc"></p>
+<p>⭐ Rating: <span id="pRating"></span></p>
+
+<button class="chat">Chat with Client</button>
+<button class="apply" onclick="hireClient()">Apply for Job</button>
+<button class="back" onclick="closeProfile()">Close</button>
+</div>
+
+<script>
+
+const names=["Sharma","Patel","Gupta","Singh","Verma","Mehta","Kapoor","Joshi","Agarwal","Iyer"];
+const categories=["Plumbing","Electrician","Carpenter","Driver","Chef","AC Repair","Painting","Construction"];
+const states=["Delhi","Mumbai","Pune","Bangalore","Ahmedabad","Jaipur","Lucknow","Chennai","Kolkata"];
+const descriptions=[
+"Looking for skilled professional urgently.",
+"Home maintenance work available.",
+"Need experienced worker for project.",
+"Flexible timing and good payment."
+];
+
+let clients=[];
+
+for(let i=1;i<=150;i++){
+clients.push({
+name:"Client "+names[Math.floor(Math.random()*names.length)],
+category:categories[Math.floor(Math.random()*categories.length)],
+state:states[Math.floor(Math.random()*states.length)],
+desc:descriptions[Math.floor(Math.random()*descriptions.length)],
+rating:Math.floor(Math.random()*5)+1,
+budget:1000+Math.floor(Math.random()*9000),
+img:Math.floor(Math.random()*70),
+busy: Math.random() < 0.3
+});
+}
+
+const container=document.getElementById("clientList");
+
+function render(data){
+container.innerHTML="";
+data.forEach(c=>{
+const card=document.createElement("div");
+card.className="card";
+card.innerHTML=`
+<img src="https://i.pravatar.cc/150?img=${c.img}">
+<h3>${c.name}</h3>
+<p>${c.category}</p>
+<p>${c.state}</p>
+`;
+card.onclick=()=>openProfile(c);
+container.appendChild(card);
+});
+}
+
+render(clients);
+
+search.addEventListener("input",e=>{
+const val=e.target.value.toLowerCase();
+render(clients.filter(c=>c.name.toLowerCase().includes(val) || c.category.toLowerCase().includes(val)));
+});
+
+stateFilter.addEventListener("change",e=>{
+const val=e.target.value;
+render(val?clients.filter(c=>c.state===val):clients);
+});
+
+let currentClient=null;
+
+function openProfile(c){
+
+currentClient=c;
+
+profilePanel.classList.add("active");
+
+pImg.src=`https://i.pravatar.cc/150?img=${c.img}`;
+pName.innerText=c.name;
+pCategory.innerText=c.category;
+pState.innerText="Location: "+c.state;
+pBudget.innerText="Budget: ₹"+c.budget;
+pDesc.innerText=c.desc;
+pRating.innerText="⭐".repeat(c.rating);
+
+const statusEl=document.getElementById("pStatus");
+const applyBtn=document.querySelector(".apply");
+
+if(c.busy){
+statusEl.innerText="● Busy";
+statusEl.className="status busy";
+applyBtn.disabled=true;
+applyBtn.innerText="Client Busy";
+}else{
+statusEl.innerText="● Available";
+statusEl.className="status available";
+applyBtn.disabled=false;
+applyBtn.innerText="Apply for Job";
+}
+
+}
+
+function closeProfile(){
+profilePanel.classList.remove("active");
+}
+
+function goHome(){
+window.location.href="index.html";
+}
+
+function hireClient(){
+
+if(currentClient.busy){
+alert("❌ Client is currently busy");
+return;
+}
+
+const hire={
+client:currentClient.name,
+job:currentClient.category,
+date:new Date().toLocaleString()
+};
+
+let data=JSON.parse(localStorage.getItem("clientHire"))||[];
+data.push(hire);
+localStorage.setItem("clientHire",JSON.stringify(data));
+
+alert("Client Hire Request Sent ✅");
+
+}
+
+</script>
+
+</body>
+</html>

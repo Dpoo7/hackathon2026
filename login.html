@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - KaamSetu</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:"Segoe UI",sans-serif;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+}
+
+/* LOGIN BOX */
+
+.login-box{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(15px);
+padding:40px;
+border-radius:20px;
+width:320px;
+text-align:center;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+.login-box h2{
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:10px;
+outline:none;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:25px;
+background:linear-gradient(135deg,#00e0ff,#007bff);
+color:white;
+font-size:16px;
+cursor:pointer;
+margin-top:10px;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.05);
+box-shadow:0 0 15px rgba(0,140,255,0.6);
+}
+
+.register-link{
+margin-top:15px;
+font-size:14px;
+opacity:0.9;
+}
+
+.register-link a{
+color:#00e5ff;
+text-decoration:none;
+font-weight:bold;
+}
+
+.register-link a:hover{
+text-decoration:underline;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="login-box">
+
+<h2>Login to KaamSetu</h2>
+
+<form id="loginForm">
+
+<input type="text" id="username" placeholder="Username" required>
+<input type="password" id="password" placeholder="Password" required>
+
+<button type="submit">Login</button>
+
+</form>
+
+<div class="register-link">
+New member? <a href="register.html">Register here</a>
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("loginForm").addEventListener("submit", function(e){
+
+e.preventDefault();
+
+const storedUser = JSON.parse(localStorage.getItem("kaamsetuUser"));
+
+const username = document.getElementById("username").value;
+
+if(storedUser && username === storedUser.name){
+
+alert("Login Successful ✅");
+
+window.location.href="index.html"; // change if needed
+
+}else{
+
+alert("User not found ❌ Please register first");
+
+}
+
+});
+fetch("http://127.0.0.1:8000/login",{
+method:"POST",
+body:new FormData(document.getElementById("loginForm"))
+})
+.then(res=>res.json())
+.then(data=>{
+if(data.status==="success"){
+alert("Welcome "+data.name)
+window.location.href="index.html"
+}else{
+alert("Invalid login")
+}
+});
+fetch("http://127.0.0.1:8000/login",{
+method:"POST",
+body:new FormData(document.getElementById("loginForm"))
+})
+.then(res=>res.json())
+.then(data=>{
+if(data.status==="success"){
+alert("Welcome "+data.name)
+window.location.href="index.html"
+}else{
+alert("Invalid login")
+}
+});
+</script>
+
+</body>
+</html>
